@@ -28,10 +28,10 @@ jobs:
 
       - name: Build Executable
         run: |
-          pyinstaller --onefile restore.py
+          pyinstaller --onefile restore_scrobbles.py
 
       - name: Archive Executable
         uses: actions/upload-artifact@v3
         with:
           name: python-executable-${{ matrix.os }}
-          path: dist/restore
+          path: dist/restore_scrobbles{{ matrix.os == 'windows-latest' && '.exe' || '' }}
