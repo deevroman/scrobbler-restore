@@ -19,6 +19,8 @@ END_TIME = input()
 import json
 from datetime import datetime
 from yandex_music import Client
+import os
+import pylast
 
 start_time = datetime.fromisoformat(START_TIME)
 end_time = datetime.fromisoformat(END_TIME)
@@ -63,9 +65,6 @@ print("Проверьте начало и конец списка")
 ans = input("Загрузить в Last.fm? [yes/No]\n")
 
 if ans[0] == "y":
-    import os
-    import pylast
-
     SESSION_KEY_FILE = ".session_key"
     network = pylast.LastFMNetwork("15ea55ecc2d12d5910bd1a56c89fb604",
                                    "2dff873c07e12a590e512c62b86b899c")
