@@ -54,6 +54,6 @@ jobs:
           prerelease: true
           title: "Development Build"
           files: |
-            macos-latest 
+            macos-latest-executable
             ubuntu-latest-executable
             windows-latest-executable.exe
