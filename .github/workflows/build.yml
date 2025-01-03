@@ -13,7 +13,8 @@ jobs:
       matrix:
         os: [ ubuntu-latest, windows-latest, macos-latest ]
     runs-on: ${{ matrix.os }}
-
+    outputs:
+      upload_url: ${{ steps.create_release.outputs.upload_url }}
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
@@ -35,66 +36,24 @@ jobs:
       - name: Archive Executable
         uses: actions/upload-artifact@v3
         with:
-          name: python-executable-${{ matrix.os }}
+          name: ${{ matrix.os }}-executable
           path: |
             dist/restore_scrobbles${{ matrix.os == 'windows-latest' && '.exe' || '' }}
 
-  release:
+  create_release:
+    name: "Prelease"
     needs: build
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v3
+      - uses: actions/download-artifact@v3
 
-      - name: Download Build Artifacts
-        uses: actions/download-artifact@v3
+      - uses: "marvinpinto/action-automatic-releases@latest"
         with:
-          name: python-executable-ubuntu-latest
-          path: artifacts/ubuntu-latest
-
-      - name: Download Build Artifacts (Windows)
-        uses: actions/download-artifact@v3
-        with:
-          name: python-executable-windows-latest
-          path: artifacts/windows-latest
-
-      - name: Download Build Artifacts (macOS)
-        uses: actions/download-artifact@v3
-        with:
-          name: python-executable-macos-latest
-          path: artifacts/macos-latest
-
-      - name: Create Release
-        uses: actions/create-release@v1
-        with:
-          tag_name: v1.0.0
-          release_name: Python Executable Release
-          draft: false
-          prerelease: false
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Upload Release Assets
-        uses: actions/upload-release-asset@v1
-        with:
-          upload_url: ${{ steps.create-release.outputs.upload_url }}
-          asset_path: artifacts/ubuntu-latest/restore_scrobbles
-          asset_name: restore_scrobbles-ubuntu
-          asset_content_type: application/octet-stream
-
-      - name: Upload Release Assets (Windows)
-        uses: actions/upload-release-asset@v1
-        with:
-          upload_url: ${{ steps.create-release.outputs.upload_url }}
-          asset_path: artifacts/windows-latest/restore_scrobbles.exe
-          asset_name: restore_scrobbles-windows.exe
-          asset_content_type: application/octet-stream
-
-      - name: Upload Release Assets (macOS)
-        uses: actions/upload-release-asset@v1
-        with:
-          upload_url: ${{ steps.create-release.outputs.upload_url }}
-          asset_path: artifacts/macos-latest/restore_scrobbles
-          asset_name: restore_scrobbles-macos
-          asset_content_type: application/octet-stream
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "latest"
+          prerelease: true
+          title: "Development Build"
+          files: |
+            macos-executable-latest 
+            ubuntu-executable
+            windows-executable-latest.exe
