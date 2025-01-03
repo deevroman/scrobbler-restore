@@ -36,7 +36,7 @@ jobs:
       - name: Archive Executable
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ matrix.os }}-executable
+          name: ${{ matrix.os }}-executable${{ matrix.os == 'windows-latest' && '.exe' || '' }}
           path: |
             dist/restore_scrobbles${{ matrix.os == 'windows-latest' && '.exe' || '' }}
 
@@ -54,6 +54,6 @@ jobs:
           prerelease: true
           title: "Development Build"
           files: |
-            macos-executable-latest 
-            ubuntu-executable
-            windows-executable-latest.exe
+            macos-latest 
+            ubuntu-latest-executable
+            windows-latest-executable.exe
