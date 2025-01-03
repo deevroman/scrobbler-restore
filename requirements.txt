@@ -1,0 +1,2 @@
+pylast==5.3.0
+yandex-music==2.2.0
